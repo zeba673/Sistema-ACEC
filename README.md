@@ -35,13 +35,22 @@ Los resultados serán estimaciones. La cámara, la iluminación, las oclusiones 
 
 El objetivo es que el sistema funcione **sin conexión a Internet ni a otros equipos** durante la muestra. La cámara, la recolección de datos, el análisis y la visualización se ejecutarían localmente en la Raspberry Pi 5.
 
-Como modelos candidatos para evaluar más adelante se mencionaron:
+### Candidato inicial: Granite 4.2 3B
 
-- Gemma 4 E2B
-- Granite 4.2 2B
-- Gemma 4 E4B
+Como primer modelo para probar se propone **`granite4.2:3b` en una cuantización liviana, ejecutado con Ollama**.
 
-La elección queda pendiente de comprobar compatibilidad, memoria y velocidad en la Raspberry Pi 5. La IA recibiría las estadísticas recopiladas para ayudar a resumirlas; el diseño inicial no requiere que el modelo procese el video en vivo. Los nombres y requisitos de los modelos también se verificarán antes de implementarlos.
+Se elige como candidato inicial porque:
+
+- Su variante 3B publicada en la biblioteca de Ollama ocupa aproximadamente **2,2 GB en disco**. Esto describe el archivo del modelo; no es una medida de la RAM total que usará al ejecutarse.
+- Granite 4.2 declara soporte para español y salida estructurada en JSON, útil para convertir métricas numéricas en resúmenes consistentes.
+- Solo se le pasarían estadísticas agregadas (por ejemplo, visitas y permanencia por puesto), no el video en vivo. No necesitamos sus capacidades de imagen para esta tarea.
+- Su archivo cabe holgadamente en el SSD SATA de 480 GB, que también permite conservar el sistema y los datos locales de la muestra.
+
+La Raspberry Pi 5 tiene **16 GB de RAM**, pero esa memoria también la necesitan el sistema, la interfaz y el proceso de visión. El tamaño del archivo no garantiza que el modelo vaya a responder rápido: la velocidad real de inferencia en la Pi todavía debe medirse. Por eso, la IA se ejecutaría por lotes tras un intervalo o un umbral de datos, y la captura deberá conservar prioridad.
+
+**Alternativas para comparar:** Gemma 4 E2B y Gemma 4 E4B. Gemma 4 ofrece modelos pequeños orientados a dispositivos de borde, pero E2B/E4B tienen variantes de Ollama más pesadas en disco que Granite 4.2 3B. Se probarán solo si Granite no produce resúmenes suficientemente útiles en español.
+
+> La elección es provisional. Antes de la muestra se comprobarán instalación sin Internet, consumo de memoria, tiempo de respuesta y efecto sobre la captura en la propia Pi 5. El modelo y sus dependencias se descargarán previamente; el día de la prueba no se dependerá de Ollama Cloud ni de ningún servicio externo.
 
 ## Privacidad
 
