@@ -1,61 +1,62 @@
 # Sistema ACEC
 
 > **Análisis de comportamiento en espacios cerrados**  
-> Proyecto escolar para observar, de forma anónima, cómo se ocupa un espacio.
+> Proyecto escolar para observar cómo se ocupa un espacio, con procesamiento completamente local.
 
-ACEC busca usar una cámara web conectada a una **Raspberry Pi 5** para estimar cuántas personas hay en un espacio, cuánto tiempo permanecen y qué zonas visitan. La persona que realiza la prueba podrá marcar y ajustar esas zonas en el momento, directamente sobre la imagen de la cámara.
+ACEC busca estimar cuántas personas hay en un espacio, cuánto tiempo permanecen y qué puestos visitan. La persona que realiza la prueba podrá marcar y ajustar cada puesto sobre la imagen, en el SUM y en el momento.
 
-Este README es el punto de partida del proyecto. La idea, el alcance y las decisiones técnicas se irán completando a medida que avance el trabajo.
+## Cómo se espera que funcione
 
----
+1. **Preparar el espacio:** abrir la vista de cámara y dibujar sobre la imagen las zonas correspondientes a los puestos expositores. Cada zona podrá nombrarse y ajustarse.
+2. **Recolectar datos:** detectar y seguir personas de forma temporal para estimar la ocupación, las visitas y el tiempo de permanencia en cada puesto.
+3. **Analizar los resultados:** después de un intervalo (por ejemplo, una hora) o al alcanzar cierta cantidad de personas detectadas, iniciar un análisis con IA ejecutada localmente.
+4. **Mostrar estadísticas:** presentar en pantalla tanto las métricas calculadas como un resumen en lenguaje sencillo.
 
-## ¿Qué se quiere observar?
+La recolección de datos es la tarea principal y debe tener prioridad. El análisis con IA es una etapa posterior, no necesaria para contar ni calcular las métricas básicas. Se buscará que no interrumpa la captura mientras trabaja.
 
-- **Ocupación:** cantidad estimada de personas en el espacio y en cada zona.
-- **Permanencia:** tiempo aproximado que cada persona detectada pasa en una zona.
-- **Recorrido por zonas:** qué puestos o áreas se visitan y durante cuánto tiempo.
+## Puestos ajustables
 
-El sistema se plantea como una herramienta de observación del espacio, no de identificación de personas.
+Como la distribución real del SUM se definirá durante la prueba, los puestos no estarán preconfigurados. La interfaz debería permitir:
 
-## Zonas ajustables
+- Dibujar una zona encima de la imagen de la cámara.
+- Asignarle un nombre, por ejemplo, “Puesto de ciencias”.
+- Moverla, cambiar su tamaño o eliminarla durante la configuración.
 
-Como el lugar de prueba no está definido de antemano, las zonas no deberían quedar fijas en el programa. La idea es poder:
+## Estadísticas previstas
 
-1. Ver la imagen en vivo.
-2. Marcar una zona sobre la imagen.
-3. Ponerle un nombre, por ejemplo, “Puesto 1” o “Entrada”.
-4. Moverla, cambiar su tamaño o eliminarla durante la configuración.
+- Cantidad estimada de personas detectadas.
+- Ocupación actual y visitas por puesto.
+- Tiempo promedio de permanencia en cada puesto.
+- Comparación de actividad entre puestos y a lo largo del tiempo.
 
-Así se podrán definir los puestos en el momento, según el espacio real.
+Los resultados serán estimaciones. La cámara, la iluminación, las oclusiones y el movimiento de las personas pueden afectar el conteo y los tiempos.
 
-## Primera versión imaginada
+## IA local y funcionamiento sin Internet
 
-Una primera muestra podría incluir:
+El objetivo es que el sistema funcione **sin conexión a Internet ni a otros equipos** durante la muestra. La cámara, la recolección de datos, el análisis y la visualización se ejecutarían localmente en la Raspberry Pi 5.
 
-- Vista en vivo de la webcam.
-- Herramienta sencilla para dibujar y editar zonas.
-- Detección y seguimiento temporal de personas para evitar contarlas de nuevo en cada imagen.
-- Conteo actual por zona y medición aproximada de permanencia.
-- Resumen visible de los resultados.
+Como modelos candidatos para evaluar más adelante se mencionaron:
 
-La cámara considerada inicialmente es una webcam USB Raptor Vision 4K. Su compatibilidad con Raspberry Pi OS todavía debe comprobarse en el equipo. Para este proyecto, que la cámara funcione de forma estable importa más que aprovechar la resolución 4K.
+- Gemma 4 E2B
+- Granite 4.2 2B
+- Gemma 4 E4B
 
-## Privacidad y límites
+La elección queda pendiente de comprobar compatibilidad, memoria y velocidad en la Raspberry Pi 5. La IA recibiría las estadísticas recopiladas para ayudar a resumirlas; el diseño inicial no requiere que el modelo procese el video en vivo. Los nombres y requisitos de los modelos también se verificarán antes de implementarlos.
 
-La propuesta inicial es procesar la imagen localmente en la Raspberry Pi y guardar estadísticas, no grabaciones de video ni identidades. El conteo y la permanencia serán estimaciones: la posición de la cámara, la iluminación, las oclusiones y la distancia entre personas pueden afectar los resultados.
+## Privacidad
 
-Antes de una prueba real, habrá que acordar cómo informar a las personas presentes y qué datos conservar.
+La propuesta es procesar el video localmente y conservar estadísticas, sin guardar grabaciones ni identificar a las personas. Antes de una prueba real habrá que definir cómo informar a quienes estén en el SUM y qué datos conservar.
 
-## Estado
+## Estado del proyecto
 
 **Etapa:** definición de la idea y del alcance.
 
-Todavía faltan decisiones como la interfaz que se usará para configurar las zonas, el formato de los resultados, las condiciones de prueba y el método de detección. Se irán incorporando a este documento cuando queden definidas.
+La Raspberry Pi 5 todavía necesita reinstalarse y la webcam aún no está disponible, así que el hardware y el rendimiento se probarán más adelante. Mientras tanto, se puede avanzar en el diseño de la interfaz, el formato de los datos y las métricas usando material de prueba.
 
-## Objetivo del proyecto
+## Objetivo
 
-Construir una muestra escolar clara y ajustable que ayude a entender cómo se distribuyen y se mueven las personas dentro de un espacio cerrado.
+Crear una muestra escolar ajustable que ayude a entender cómo se distribuyen las visitas y la permanencia entre los puestos expositores del SUM, manteniendo todo el procesamiento en local.
 
 ---
 
-*Documento vivo: esta descripción irá cambiando junto con el proyecto.*
+*Documento vivo: el alcance y las decisiones técnicas se irán actualizando a medida que avance el proyecto.*
